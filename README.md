@@ -48,6 +48,12 @@ make build
 1. Create a configuration file `config.yaml`:
 
 ```yaml
+logging:
+  driver: file
+  format: json
+  level: info
+  file: periphery.log
+
 speaker:
   asn: 64600
   routerId: "10.0.0.1"
@@ -258,6 +264,28 @@ bfd:
   passive: false
 ```
 
+## Logging Configuration
+
+Periphery supports flexible logging with multiple drivers and formats:
+
+```yaml
+logging:
+  driver: file        # Options: file, syslog, journald, windows, none
+  format: json        # Options: json, text
+  level: info         # Options: debug, info, warn, error
+  file: periphery.log # Required for file driver
+```
+
+### Logging Drivers
+
+- **file**: Write logs to a file
+- **syslog**: Send logs to syslog (Unix/Linux)
+- **journald**: Send logs to systemd journal (Linux)
+- **windows**: Send logs to Windows Event Log (Windows 2025)
+- **none**: Disable logging
+
+See [docs/logging.md](docs/logging.md) for detailed logging configuration and examples.
+
 ## Development
 
 ### Prerequisites
@@ -294,6 +322,7 @@ periphery/
 ├── pkg/
 │   ├── bfd/            # BFD agent implementation
 │   ├── config/         # Configuration structures
+│   ├── logger/         # Logging infrastructure
 │   ├── probe/          # Health probe implementations
 │   │   ├── probe.go          # Probe interface and manager
 │   │   ├── probe_http.go     # HTTP probe
@@ -304,6 +333,8 @@ periphery/
 │   ├── service/        # Service management (systemd)
 │   └── speaker/        # BGP speaker (GoBGP wrapper)
 └── docs/               # Documentation
+    ├── examples/       # Configuration examples
+    └── logging.md      # Logging documentation
 ```
 
 ## Contributing

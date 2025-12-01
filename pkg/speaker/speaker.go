@@ -14,6 +14,7 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 
 	"github.com/ahmet2mir/periphery/pkg/config"
+	"github.com/ahmet2mir/periphery/pkg/logger"
 )
 
 type Speaker struct {
@@ -23,7 +24,10 @@ type Speaker struct {
 }
 
 func New(c *config.Config, ctx context.Context) (*Speaker, error) {
-	s := server.NewBgpServer(server.GrpcListenAddress(c.API.GetURI()))
+	s := server.NewBgpServer(
+		server.GrpcListenAddress(c.API.GetURI()),
+		server.LoggerOption(logger.NewGoBGPLogger()),
+	)
 	return &Speaker{Config: c, Server: s, Context: ctx}, nil
 }
 

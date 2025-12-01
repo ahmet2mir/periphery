@@ -1,0 +1,42 @@
+---
+# Example configuration for Windows 2025
+# Uses Windows Event Log for native Windows logging
+logging:
+  driver: windows
+  format: json
+  level: info
+
+speaker:
+  asn: 64600
+  routerId: "192.168.1.100"
+  gracefulRestartEnabled: true
+  gracefulRestartRestartTime: 10
+
+api:
+  listenAddress: "127.0.0.1"
+  listenPort: 8081
+
+neighbors:
+  -
+    address: "192.168.1.1"
+    asn: 64599
+    ebgpMultihopEnabled: true
+
+prefixes:
+  -
+    ipAddress: "192.168.100.1/32"
+    communities:
+      - '6:97'
+    nextHop: "192.168.1.100"
+    asn: 64600
+    withdrawOnDown: true
+
+    livenessProbe:
+      initialDelaySeconds: "2s"
+      periodSeconds: "5s"
+      timeoutSeconds: "60s"
+      failureThreshold: 3
+      successThreshold: 1
+      http:
+        path: /healthz
+        port: 80

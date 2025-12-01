@@ -8,6 +8,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
+	"github.com/ahmet2mir/periphery/pkg/logger"
 	"github.com/ahmet2mir/periphery/pkg/probe"
 	"github.com/ahmet2mir/periphery/pkg/service"
 )
@@ -22,11 +23,12 @@ func (ca *ConfigAPI) GetURI() string {
 }
 
 type Config struct {
-	Speaker   Speaker    `yaml:"speaker"`
-	BFD       *BFDConfig `yaml:"bfd"`
-	API       ConfigAPI  `yaml:"api"`
-	Neighbors []Neighbor `yaml:"neighbors"`
-	Prefixes  []Prefix   `yaml:"prefixes"`
+	Logging   logger.Config `yaml:"logging"`
+	Speaker   Speaker       `yaml:"speaker"`
+	BFD       *BFDConfig    `yaml:"bfd"`
+	API       ConfigAPI     `yaml:"api"`
+	Neighbors []Neighbor    `yaml:"neighbors"`
+	Prefixes  []Prefix      `yaml:"prefixes"`
 }
 
 type Speaker struct {

@@ -1,0 +1,38 @@
+---
+# Example configuration for development
+# Uses text format and debug level for better readability
+logging:
+  driver: file
+  format: text
+  level: debug
+  file: periphery-dev.log
+
+speaker:
+  asn: 64600
+  routerId: "10.135.55.195"
+  gracefulRestartEnabled: false
+  gracefulRestartRestartTime: 10
+
+api:
+  listenAddress: "127.0.0.1"
+  listenPort: 8081
+
+neighbors:
+  -
+    address: "10.134.21.74"
+    asn: 64599
+    ebgpMultihopEnabled: true
+
+prefixes:
+  -
+    ipAddress: "10.138.39.183/32"
+    nextHop: "10.135.55.195"
+    asn: 64600
+    withdrawOnDown: true
+
+    livenessProbe:
+      initialDelaySeconds: "1s"
+      periodSeconds: "5s"
+      http:
+        path: /healthz
+        port: 8080

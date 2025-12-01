@@ -53,3 +53,6 @@ coverage.html
 *.swp
 *.swo
 *~
+
+# App
+periphery.log

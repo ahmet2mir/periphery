@@ -10,13 +10,10 @@ import (
 
 	"github.com/ahmet2mir/periphery/pkg/bfd"
 	"github.com/ahmet2mir/periphery/pkg/config"
+	"github.com/ahmet2mir/periphery/pkg/logger"
 	"github.com/ahmet2mir/periphery/pkg/scheduler"
 	"github.com/ahmet2mir/periphery/pkg/speaker"
 )
-
-func init() {
-	zap.ReplaceGlobals(zap.Must(zap.NewProduction()))
-}
 
 func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
@@ -24,8 +21,16 @@ func main() {
 
 	c, err := config.New("config.test.yaml")
 	if err != nil {
-		zap.S().Fatal(err)
+		tempLogger := zap.Must(zap.NewProduction())
+		tempLogger.Sugar().Fatal(err)
 	}
+
+	cleanup, err := logger.Initialize(c.Logging)
+	if err != nil {
+		tempLogger := zap.Must(zap.NewProduction())
+		tempLogger.Sugar().Fatalf("Failed to initialize logger: %v", err)
+	}
+	defer cleanup()
 
 	s, err := speaker.New(c, ctx)
 	if err != nil {

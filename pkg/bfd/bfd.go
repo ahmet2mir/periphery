@@ -22,17 +22,6 @@ func Run(cfg *config.BFDConfig) error {
 
 	zap.S().Info("Starting BFD agent", "listenAddress", cfg.GetListenURI())
 
-	loggerInstance, err := zap.NewDevelopment()
-	if err != nil {
-		return fmt.Errorf("failed to create BFD logger: %w", err)
-	}
-	defer func() {
-		if syncErr := loggerInstance.Sync(); syncErr != nil {
-			zap.S().Debug("BFD logger sync error", syncErr)
-		}
-	}()
-	logger := loggerInstance.Sugar()
-
 	c := ludp.AgentConfig{}
 	c.IPv4Only = true
 	c.ListenAddress = cfg.GetListenURI()
@@ -41,7 +30,7 @@ func Run(cfg *config.BFDConfig) error {
 	c.RequiredMinRxInterval = uint32(cfg.MinimumReceptionInterval.Milliseconds())
 	c.DetectMult = cfg.DetectionMultiplier
 
-	_, err = ludp.NewAgent(c, logger)
+	_, err := ludp.NewAgent(c, zap.S())
 	if err != nil {
 		return fmt.Errorf("error creating BFD agent: %w", err)
 	}

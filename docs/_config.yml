@@ -5,6 +5,8 @@ description: A lightweight BGP anycast service with Kubernetes-inspired health p
 show_downloads: true
 google_analytics:
 
+repository: ahmet2mir/periphery
+
 # GitHub metadata
 github:
   repository_url: https://github.com/ahmet2mir/periphery

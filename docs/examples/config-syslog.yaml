@@ -1,0 +1,42 @@
+---
+# Example configuration for syslog logging
+# Recommended for traditional Unix/Linux systems
+logging:
+  driver: syslog
+  format: json
+  level: info
+
+speaker:
+  asn: 64600
+  routerId: "10.135.55.195"
+  gracefulRestartEnabled: true
+  gracefulRestartRestartTime: 10
+
+api:
+  listenAddress: "127.0.0.1"
+  listenPort: 8081
+
+neighbors:
+  -
+    address: "10.134.21.74"
+    asn: 64599
+    ebgpMultihopEnabled: true
+
+prefixes:
+  -
+    ipAddress: "10.138.39.183/32"
+    communities:
+      - '6:97'
+    nextHop: "10.135.55.195"
+    asn: 64600
+    withdrawOnDown: true
+
+    livenessProbe:
+      initialDelaySeconds: "2s"
+      periodSeconds: "5s"
+      timeoutSeconds: "60s"
+      failureThreshold: 3
+      successThreshold: 1
+      http:
+        path: /healthz
+        port: 80

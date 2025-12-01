@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/coreos/go-systemd/v22/dbus"
+	"go.uber.org/zap"
 )
 
 type Service struct {
@@ -32,7 +33,7 @@ func (s *Service) Started(ctx context.Context) (bool, error) {
 		return false, fmt.Errorf("failed to get unit properties: %w", err)
 	}
 
-	fmt.Printf("Service %s status: %s\n", s.Name, properties["ActiveState"])
+	zap.S().Debug(fmt.Sprintf("Service %s status: %s\n", s.Name, properties["ActiveState"]))
 
 	return true, nil
 }
