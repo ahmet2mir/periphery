@@ -1,6 +1,6 @@
-# Getting Started with Periphery
+# Getting Started with Herald
 
-This guide will help you get Periphery up and running quickly.
+This guide will help you get Herald up and running quickly.
 
 ## Prerequisites
 
@@ -16,24 +16,24 @@ Download the latest release for your platform:
 
 ```bash
 # Download for Linux AMD64
-wget https://github.com/ahmet2mir/periphery/releases/latest/download/periphery_linux_amd64
+wget https://github.com/ahmet2mir/herald/releases/latest/download/herald_linux_amd64
 
 # Make it executable
-chmod +x periphery_linux_amd64
+chmod +x herald_linux_amd64
 
 # Move to system path
-sudo mv periphery_linux_amd64 /usr/local/bin/periphery
+sudo mv herald_linux_amd64 /usr/local/bin/herald
 
 # Verify installation
-periphery --version
+herald --version
 ```
 
 ### Option 2: Build from Source
 
 ```bash
 # Clone repository
-git clone https://github.com/ahmet2mir/periphery.git
-cd periphery
+git clone https://github.com/ahmet2mir/herald.git
+cd herald
 
 # Install build dependencies
 make setup
@@ -41,13 +41,13 @@ make setup
 # Build
 make build
 
-# Binary will be in dist/periphery_linux_amd64_v1/periphery
-sudo cp dist/periphery_linux_amd64_v1/periphery /usr/local/bin/
+# Binary will be in dist/herald_linux_amd64_v1/herald
+sudo cp dist/herald_linux_amd64_v1/herald /usr/local/bin/
 ```
 
 ## Basic Configuration
 
-Create a configuration file at `/etc/periphery/config.yaml`:
+Create a configuration file at `/etc/herald/config.yaml`:
 
 ```yaml
 # BGP Speaker Configuration
@@ -94,34 +94,34 @@ prefixes:
         expectedStatus: [200]
 ```
 
-## Running Periphery
+## Running Herald
 
 ### Foreground Mode
 
 ```bash
-periphery --config /etc/periphery/config.yaml
+herald --config /etc/herald/config.yaml
 ```
 
 ### Systemd Service
 
-Create `/etc/systemd/system/periphery.service`:
+Create `/etc/systemd/system/herald.service`:
 
 ```ini
 [Unit]
-Description=Periphery BGP Anycast Service
+Description=Herald BGP Anycast Service
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 Type=simple
-User=periphery
-Group=periphery
-ExecStart=/usr/local/bin/periphery --config /etc/periphery/config.yaml
+User=herald
+Group=herald
+ExecStart=/usr/local/bin/herald --config /etc/herald/config.yaml
 Restart=always
 RestartSec=5
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=periphery
+SyslogIdentifier=herald
 
 [Install]
 WantedBy=multi-user.target
@@ -131,23 +131,23 @@ Create user and start service:
 
 ```bash
 # Create user
-sudo useradd -r -s /bin/false periphery
+sudo useradd -r -s /bin/false herald
 
 # Create config directory
-sudo mkdir -p /etc/periphery
-sudo chown periphery:periphery /etc/periphery
+sudo mkdir -p /etc/herald
+sudo chown herald:herald /etc/herald
 
 # Copy config
-sudo cp config.yaml /etc/periphery/
-sudo chown periphery:periphery /etc/periphery/config.yaml
+sudo cp config.yaml /etc/herald/
+sudo chown herald:herald /etc/herald/config.yaml
 
 # Enable and start service
 sudo systemctl daemon-reload
-sudo systemctl enable periphery
-sudo systemctl start periphery
+sudo systemctl enable herald
+sudo systemctl start herald
 
 # Check status
-sudo systemctl status periphery
+sudo systemctl status herald
 ```
 
 ## Verifying BGP Session
@@ -159,7 +159,7 @@ Check BGP neighbor status:
 gobgp neighbor
 
 # Check logs
-sudo journalctl -u periphery -f
+sudo journalctl -u herald -f
 ```
 
 You should see log messages indicating:
@@ -200,7 +200,7 @@ Check:
 systemctl status nginx.service
 
 # View logs
-sudo journalctl -u periphery -n 100
+sudo journalctl -u herald -n 100
 ```
 
 ### Probes Failing

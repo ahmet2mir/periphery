@@ -1,4 +1,4 @@
-module github.com/ahmet2mir/periphery
+module github.com/ahmet2mir/herald
 
 go 1.23.4
 

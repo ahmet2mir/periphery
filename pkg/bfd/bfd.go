@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ahmet2mir/periphery/pkg/config"
+	"github.com/ahmet2mir/herald/pkg/config"
 	lbfd "github.com/rhgb/gobfd/bfd"
 	ludp "github.com/rhgb/gobfd/udp"
 	"go.uber.org/zap"

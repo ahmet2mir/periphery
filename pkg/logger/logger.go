@@ -41,7 +41,7 @@ func DefaultConfig() Config {
 		Driver: DriverFile,
 		Format: FormatJSON,
 		Level:  "info",
-		File:   "periphery.log",
+		File:   "herald.log",
 	}
 }
 

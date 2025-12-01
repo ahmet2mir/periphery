@@ -95,12 +95,12 @@ jobs:
       - name: Build binary
         run: |
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} \
-          go build -o periphery-${{ matrix.goos }}-${{ matrix.goarch }} \
+          go build -o herald-${{ matrix.goos }}-${{ matrix.goarch }} \
           -ldflags="-s -w" .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: periphery-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: periphery-${{ matrix.goos }}-${{ matrix.goarch }}
+          name: herald-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: herald-${{ matrix.goos }}-${{ matrix.goarch }}
           retention-days: 7

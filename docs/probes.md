@@ -1,6 +1,6 @@
 # Health Probes
 
-Periphery uses Kubernetes-inspired health probes to monitor service health and control BGP route announcements.
+Herald uses Kubernetes-inspired health probes to monitor service health and control BGP route announcements.
 
 ## Probe Types
 

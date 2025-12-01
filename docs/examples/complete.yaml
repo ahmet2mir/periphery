@@ -1,4 +1,4 @@
-# Complete Periphery Configuration Example
+# Complete Herald Configuration Example
 # This file demonstrates all available configuration options
 
 # BGP Speaker Configuration
@@ -94,7 +94,7 @@ prefixes:
         expectedStatus: [200, 204]
         httpHeaders:
           - name: User-Agent
-            value: "Periphery/1.0"
+            value: "Herald/1.0"
 
   # Example 2: Database with TCP check
   - ipAddress: "192.0.2.2/32"

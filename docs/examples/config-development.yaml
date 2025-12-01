@@ -5,7 +5,7 @@ logging:
   driver: file
   format: text
   level: debug
-  file: periphery-dev.log
+  file: herald-dev.log
 
 speaker:
   asn: 64600

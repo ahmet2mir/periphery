@@ -31,14 +31,14 @@ func (w *windowsEventLogWriter) Sync() error {
 // getWindowsWriter creates a Windows Event Log writer
 func getWindowsWriter(cfg Config) (zapcore.WriteSyncer, func() error, error) {
 	// Open or create event log source
-	log, err := eventlog.Open("periphery")
+	log, err := eventlog.Open("herald")
 	if err != nil {
 		// Try to install the event source
-		err = eventlog.InstallAsEventCreate("periphery", eventlog.Info|eventlog.Warning|eventlog.Error)
+		err = eventlog.InstallAsEventCreate("herald", eventlog.Info|eventlog.Warning|eventlog.Error)
 		if err != nil {
 			return nil, nil, fmt.Errorf("failed to install Windows Event Log source: %w", err)
 		}
-		log, err = eventlog.Open("periphery")
+		log, err = eventlog.Open("herald")
 		if err != nil {
 			return nil, nil, fmt.Errorf("failed to open Windows Event Log: %w", err)
 		}

@@ -9,12 +9,12 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/ahmet2mir/periphery/pkg/bfd"
-	"github.com/ahmet2mir/periphery/pkg/config"
-	"github.com/ahmet2mir/periphery/pkg/logger"
-	"github.com/ahmet2mir/periphery/pkg/metrics"
-	"github.com/ahmet2mir/periphery/pkg/scheduler"
-	"github.com/ahmet2mir/periphery/pkg/speaker"
+	"github.com/ahmet2mir/herald/pkg/bfd"
+	"github.com/ahmet2mir/herald/pkg/config"
+	"github.com/ahmet2mir/herald/pkg/logger"
+	"github.com/ahmet2mir/herald/pkg/metrics"
+	"github.com/ahmet2mir/herald/pkg/scheduler"
+	"github.com/ahmet2mir/herald/pkg/speaker"
 )
 
 func main() {

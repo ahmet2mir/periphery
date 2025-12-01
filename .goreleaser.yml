@@ -1,4 +1,4 @@
-project_name: periphery
+project_name: herald
 
 before:
   hooks:
@@ -6,8 +6,8 @@ before:
     - go mod download
 
 builds:
-  - id: periphery
-    binary: periphery
+  - id: herald
+    binary: herald
     main: .
     env:
       - CGO_ENABLED=0
@@ -40,7 +40,7 @@ builds:
       - -trimpath
 
 archives:
-  - id: periphery
+  - id: herald
     name_template: >-
       {{ .ProjectName }}_
       {{- .Version }}_
@@ -91,12 +91,12 @@ changelog:
 release:
   github:
     owner: ahmet2mir
-    name: periphery
+    name: herald
   draft: false
   prerelease: auto
   mode: append
   header: |
-    ## Periphery {{ .Tag }} ({{ .Date }})
+    ## Herald {{ .Tag }} ({{ .Date }})
 
     A lightweight BGP anycast service with Kubernetes-inspired health probes.
 
@@ -105,12 +105,12 @@ release:
     Download the appropriate binary for your platform below, or use Docker:
 
     ```bash
-    docker pull ghcr.io/ahmet2mir/periphery:{{ .Tag }}
+    docker pull ghcr.io/ahmet2mir/herald:{{ .Tag }}
     ```
   footer: |
     ## What's Changed
 
-    **Full Changelog**: https://github.com/ahmet2mir/periphery/compare/{{ .PreviousTag }}...{{ .Tag }}
+    **Full Changelog**: https://github.com/ahmet2mir/herald/compare/{{ .PreviousTag }}...{{ .Tag }}
 
     ---
 
@@ -124,8 +124,8 @@ release:
 
 dockers:
   - image_templates:
-      - "ghcr.io/ahmet2mir/periphery:{{ .Version }}-amd64"
-      - "ghcr.io/ahmet2mir/periphery:latest-amd64"
+      - "ghcr.io/ahmet2mir/herald:{{ .Version }}-amd64"
+      - "ghcr.io/ahmet2mir/herald:latest-amd64"
     use: buildx
     goos: linux
     goarch: amd64
@@ -134,16 +134,16 @@ dockers:
       - "--platform=linux/amd64"
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
       - "--label=org.opencontainers.image.description=BGP anycast service with health probes"
-      - "--label=org.opencontainers.image.url=https://github.com/ahmet2mir/periphery"
-      - "--label=org.opencontainers.image.source=https://github.com/ahmet2mir/periphery"
+      - "--label=org.opencontainers.image.url=https://github.com/ahmet2mir/herald"
+      - "--label=org.opencontainers.image.source=https://github.com/ahmet2mir/herald"
       - "--label=org.opencontainers.image.version={{ .Version }}"
       - "--label=org.opencontainers.image.created={{ .Date }}"
       - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
       - "--label=org.opencontainers.image.licenses=Apache-2.0"
 
   - image_templates:
-      - "ghcr.io/ahmet2mir/periphery:{{ .Version }}-arm64"
-      - "ghcr.io/ahmet2mir/periphery:latest-arm64"
+      - "ghcr.io/ahmet2mir/herald:{{ .Version }}-arm64"
+      - "ghcr.io/ahmet2mir/herald:latest-arm64"
     use: buildx
     goos: linux
     goarch: arm64
@@ -152,33 +152,33 @@ dockers:
       - "--platform=linux/arm64"
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
       - "--label=org.opencontainers.image.description=BGP anycast service with health probes"
-      - "--label=org.opencontainers.image.url=https://github.com/ahmet2mir/periphery"
-      - "--label=org.opencontainers.image.source=https://github.com/ahmet2mir/periphery"
+      - "--label=org.opencontainers.image.url=https://github.com/ahmet2mir/herald"
+      - "--label=org.opencontainers.image.source=https://github.com/ahmet2mir/herald"
       - "--label=org.opencontainers.image.version={{ .Version }}"
       - "--label=org.opencontainers.image.created={{ .Date }}"
       - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
       - "--label=org.opencontainers.image.licenses=Apache-2.0"
 
 docker_manifests:
-  - name_template: "ghcr.io/ahmet2mir/periphery:{{ .Version }}"
+  - name_template: "ghcr.io/ahmet2mir/herald:{{ .Version }}"
     image_templates:
-      - "ghcr.io/ahmet2mir/periphery:{{ .Version }}-amd64"
-      - "ghcr.io/ahmet2mir/periphery:{{ .Version }}-arm64"
+      - "ghcr.io/ahmet2mir/herald:{{ .Version }}-amd64"
+      - "ghcr.io/ahmet2mir/herald:{{ .Version }}-arm64"
 
-  - name_template: "ghcr.io/ahmet2mir/periphery:latest"
+  - name_template: "ghcr.io/ahmet2mir/herald:latest"
     image_templates:
-      - "ghcr.io/ahmet2mir/periphery:latest-amd64"
-      - "ghcr.io/ahmet2mir/periphery:latest-arm64"
+      - "ghcr.io/ahmet2mir/herald:latest-amd64"
+      - "ghcr.io/ahmet2mir/herald:latest-arm64"
 
 nfpms:
-  - id: periphery
-    package_name: periphery
+  - id: herald
+    package_name: herald
     vendor: Ahmet Demir
-    homepage: https://github.com/ahmet2mir/periphery
+    homepage: https://github.com/ahmet2mir/herald
     maintainer: Ahmet Demir <ahmet2mir@example.com>
     description: |
       BGP anycast service with Kubernetes-inspired health probes and BFD support.
-      Periphery provides intelligent route announcement based on service health checks.
+      Herald provides intelligent route announcement based on service health checks.
     license: Apache 2.0
     formats:
       - deb
@@ -187,12 +187,12 @@ nfpms:
     bindir: /usr/bin
     contents:
       - src: docs/examples/complete.yaml
-        dst: /etc/periphery/config.yaml.example
+        dst: /etc/herald/config.yaml.example
         type: config
       - src: LICENSE
-        dst: /usr/share/doc/periphery/LICENSE
+        dst: /usr/share/doc/herald/LICENSE
       - src: README.md
-        dst: /usr/share/doc/periphery/README.md
+        dst: /usr/share/doc/herald/README.md
     scripts:
       postinstall: "scripts/postinstall.sh"
       preremove: "scripts/preremove.sh"

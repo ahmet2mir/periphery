@@ -1,15 +1,15 @@
 #!/bin/bash
-# Pre-removal script for Periphery
+# Pre-removal script for Herald
 
 set -e
 
 # Stop and disable service if running
-if systemctl is-active --quiet periphery; then
-    systemctl stop periphery
+if systemctl is-active --quiet herald; then
+    systemctl stop herald
 fi
 
-if systemctl is-enabled --quiet periphery; then
-    systemctl disable periphery
+if systemctl is-enabled --quiet herald; then
+    systemctl disable herald
 fi
 
-echo "Periphery service stopped and disabled"
+echo "Herald service stopped and disabled"

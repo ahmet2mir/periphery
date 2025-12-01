@@ -7,10 +7,10 @@ import (
 	"github.com/robfig/cron/v3"
 	"go.uber.org/zap"
 
-	"github.com/ahmet2mir/periphery/pkg/config"
-	"github.com/ahmet2mir/periphery/pkg/metrics"
-	"github.com/ahmet2mir/periphery/pkg/probe"
-	"github.com/ahmet2mir/periphery/pkg/speaker"
+	"github.com/ahmet2mir/herald/pkg/config"
+	"github.com/ahmet2mir/herald/pkg/metrics"
+	"github.com/ahmet2mir/herald/pkg/probe"
+	"github.com/ahmet2mir/herald/pkg/speaker"
 )
 
 func RunScheduler(ctx context.Context, p config.Prefix, s *speaker.Speaker) {

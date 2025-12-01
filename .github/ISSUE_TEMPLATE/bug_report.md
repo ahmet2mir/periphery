@@ -30,7 +30,7 @@ A clear and concise description of what you expected to happen.
 
 **Environment:**
  - OS: [e.g. Ubuntu 22.04]
- - Periphery Version: [e.g. v1.0.0]
+ - Herald Version: [e.g. v1.0.0]
  - Go Version (if building from source): [e.g. 1.21]
 
 **Additional context**

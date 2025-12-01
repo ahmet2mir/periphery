@@ -1,13 +1,13 @@
-# Periphery
+# Herald
 
 > :warning: **BETA**: Not production ready yet, api and design could evolve.
 > 
 > Anycast service written in Go inspired by ExaBGP and Kubernetes-inspired health probes
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/ahmet2mir/periphery)](https://goreportcard.com/report/github.com/ahmet2mir/periphery)
+[![Go Report Card](https://goreportcard.com/badge/github.com/ahmet2mir/herald)](https://goreportcard.com/report/github.com/ahmet2mir/herald)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
-Periphery is a modern BGP speaker designed as a drop-in replacement for ExaBGP in simple anycast use cases. It provides intelligent route announcement based on service health checks, combining BGP routing with Kubernetes-style probe mechanisms.
+Herald is a modern BGP speaker designed as a drop-in replacement for ExaBGP in simple anycast use cases. It provides intelligent route announcement based on service health checks, combining BGP routing with Kubernetes-style probe mechanisms.
 
 ## Features
 
@@ -32,18 +32,18 @@ Download the latest release for your platform:
 
 ```bash
 # Linux AMD64
-wget https://github.com/ahmet2mir/periphery/releases/latest/download/periphery_linux_amd64
+wget https://github.com/ahmet2mir/herald/releases/latest/download/herald_linux_amd64
 
 # Make executable
-chmod +x periphery_linux_amd64
-sudo mv periphery_linux_amd64 /usr/local/bin/periphery
+chmod +x herald_linux_amd64
+sudo mv herald_linux_amd64 /usr/local/bin/herald
 ```
 
 Or build from source:
 
 ```bash
-git clone https://github.com/ahmet2mir/periphery.git
-cd periphery
+git clone https://github.com/ahmet2mir/herald.git
+cd herald
 make build
 ```
 
@@ -56,7 +56,7 @@ logging:
   driver: file
   format: json
   level: info
-  file: periphery.log
+  file: herald.log
 
 speaker:
   asn: 64600
@@ -96,17 +96,17 @@ prefixes:
         expectedStatus: [200]
 ```
 
-2. Run Periphery:
+2. Run Herald:
 
 ```bash
-periphery --config config.yaml
+herald --config config.yaml
 ```
 
 ## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                      Periphery                          │
+│                      Herald                          │
 ├─────────────────────────────────────────────────────────┤
 │                                                         │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐ │
@@ -270,14 +270,14 @@ bfd:
 
 ## Logging Configuration
 
-Periphery supports flexible logging with multiple drivers and formats:
+Herald supports flexible logging with multiple drivers and formats:
 
 ```yaml
 logging:
   driver: file        # Options: file, syslog, journald, windows, none
   format: json        # Options: json, text
   level: info         # Options: debug, info, warn, error
-  file: periphery.log # Required for file driver
+  file: herald.log # Required for file driver
 ```
 
 ### Logging Drivers
@@ -292,7 +292,7 @@ See [docs/logging.md](docs/logging.md) for detailed logging configuration and ex
 
 ## Prometheus Metrics
 
-Periphery exposes Prometheus metrics for comprehensive monitoring:
+Herald exposes Prometheus metrics for comprehensive monitoring:
 
 ```yaml
 metrics:
@@ -309,11 +309,11 @@ metrics:
 - **Service metrics**: Restart count, availability
 
 **Key metrics:**
-- `periphery_prefix_up`: Prefix announcement status (1=announced, 0=withdrawn)
-- `periphery_bgp_peer_up`: BGP peer connectivity
-- `periphery_probe_success_total`: Successful probe executions
-- `periphery_probe_failure_total`: Failed probe executions
-- `periphery_service_restarts_total`: Service restart count
+- `herald_prefix_up`: Prefix announcement status (1=announced, 0=withdrawn)
+- `herald_bgp_peer_up`: BGP peer connectivity
+- `herald_probe_success_total`: Successful probe executions
+- `herald_probe_failure_total`: Failed probe executions
+- `herald_service_restarts_total`: Service restart count
 
 All metrics include the `name` label for service identification in multi-service deployments.
 
@@ -350,7 +350,7 @@ make build
 ### Project Structure
 
 ```
-periphery/
+herald/
 ├── main.go              # Application entry point
 ├── pkg/
 │   ├── bfd/            # BFD agent implementation
@@ -394,6 +394,6 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 
 ## Support
 
-- Documentation: [https://ahmet2mir.github.io/periphery](https://ahmet2mir.github.io/periphery)
-- Issues: [GitHub Issues](https://github.com/ahmet2mir/periphery/issues)
-- Discussions: [GitHub Discussions](https://github.com/ahmet2mir/periphery/discussions)
+- Documentation: [https://ahmet2mir.github.io/herald](https://ahmet2mir.github.io/herald)
+- Issues: [GitHub Issues](https://github.com/ahmet2mir/herald/issues)
+- Discussions: [GitHub Discussions](https://github.com/ahmet2mir/herald/discussions)

@@ -1,6 +1,6 @@
 # Logging Configuration
 
-The periphery application supports flexible logging configuration through various drivers and formats. All application logs, including GoBGP and BFD logs, are routed through the configured logger.
+The herald application supports flexible logging configuration through various drivers and formats. All application logs, including GoBGP and BFD logs, are routed through the configured logger.
 
 ## Configuration Options
 
@@ -43,7 +43,7 @@ logging:
   driver: file
   format: json
   level: info
-  file: /var/log/periphery/periphery.log
+  file: /var/log/herald/herald.log
 ```
 
 ### File Logging with Text (Development)
@@ -53,7 +53,7 @@ logging:
   driver: file
   format: text
   level: debug
-  file: periphery.log
+  file: herald.log
 ```
 
 ### Syslog (Unix/Linux)
@@ -114,7 +114,7 @@ On Windows systems, you can use:
 - `windows` - Windows Event Log (recommended for Windows)
 - `none` - No logging
 
-**Note:** The Windows Event Log driver automatically registers the "periphery" event source if it doesn't exist.
+**Note:** The Windows Event Log driver automatically registers the "herald" event source if it doesn't exist.
 
 ## Log Levels in Detail
 
@@ -153,12 +153,12 @@ logging:
   driver: file
   format: json
   level: info
-  file: periphery.log
+  file: herald.log
 ```
 
 ## Unified Logging
 
-All components of periphery use the configured logger:
+All components of herald use the configured logger:
 - **Application logs**: Main application events, errors, and status
 - **GoBGP logs**: BGP session establishment, route updates, neighbor events
 - **BFD logs**: BFD session state changes and events
@@ -172,52 +172,52 @@ This ensures all logs are consistently formatted and routed to the same destinat
 
 ```bash
 # Follow JSON logs
-tail -f periphery.log | jq
+tail -f herald.log | jq
 
 # Follow text logs
-tail -f periphery.log
+tail -f herald.log
 
 # Search for errors
-grep "error" periphery.log
+grep "error" herald.log
 ```
 
 ### Syslog
 
 ```bash
 # View syslog
-tail -f /var/log/syslog | grep periphery
+tail -f /var/log/syslog | grep herald
 
 # Or on systems with rsyslog
-tail -f /var/log/messages | grep periphery
+tail -f /var/log/messages | grep herald
 ```
 
 ### Systemd Journal
 
 ```bash
-# View periphery logs
-journalctl -u periphery -f
+# View herald logs
+journalctl -u herald -f
 
 # View with specific log level
-journalctl -u periphery -p err
+journalctl -u herald -p err
 
 # View recent logs
-journalctl -u periphery -n 100
+journalctl -u herald -n 100
 ```
 
 ### Windows Event Log
 
 1. Open Event Viewer (eventvwr.msc)
 2. Navigate to Windows Logs > Application
-3. Filter by Source: "periphery"
+3. Filter by Source: "herald"
 
 Or use PowerShell:
 
 ```powershell
-# View recent periphery events
-Get-EventLog -LogName Application -Source periphery -Newest 50
+# View recent herald events
+Get-EventLog -LogName Application -Source herald -Newest 50
 
 # Follow events
-Get-EventLog -LogName Application -Source periphery -After (Get-Date).AddMinutes(-5) | Format-List
+Get-EventLog -LogName Application -Source herald -After (Get-Date).AddMinutes(-5) | Format-List
 ```
 
 ## Best Practices
@@ -232,16 +232,16 @@ Get-EventLog -LogName Application -Source periphery -After (Get-Date).AddMinutes
 ### Example Logrotate Configuration
 
 ```
-/var/log/periphery/periphery.log {
+/var/log/herald/herald.log {
     daily
     rotate 7
     compress
     delaycompress
     missingok
     notifempty
-    create 0644 periphery periphery
+    create 0644 herald herald
     postrotate
-        systemctl reload periphery || true
+        systemctl reload herald || true
     endscript
 }
 ```

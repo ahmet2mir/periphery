@@ -16,7 +16,7 @@ COPY . .
 # Build binary
 RUN CGO_ENABLED=0 GOOS=linux go build \
     -ldflags="-s -w -X main.version=${VERSION}" \
-    -o periphery .
+    -o herald .
 
 # Final stage
 FROM scratch
@@ -26,20 +26,20 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 
 # Copy binary
-COPY --from=builder /build/periphery /periphery
+COPY --from=builder /build/herald /herald
 
 # Create non-root user
 USER 65534:65534
 
 # Set entrypoint
-ENTRYPOINT ["/periphery"]
+ENTRYPOINT ["/herald"]
 
 # Default command
-CMD ["--config", "/etc/periphery/config.yaml"]
+CMD ["--config", "/etc/herald/config.yaml"]
 
 # Labels
-LABEL org.opencontainers.image.title="Periphery" \
+LABEL org.opencontainers.image.title="Herald" \
       org.opencontainers.image.description="BGP anycast service with Kubernetes-inspired health probes" \
-      org.opencontainers.image.url="https://github.com/ahmet2mir/periphery" \
-      org.opencontainers.image.source="https://github.com/ahmet2mir/periphery" \
+      org.opencontainers.image.url="https://github.com/ahmet2mir/herald" \
+      org.opencontainers.image.source="https://github.com/ahmet2mir/herald" \
       org.opencontainers.image.licenses="Apache-2.0"

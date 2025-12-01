@@ -33,8 +33,8 @@ config.test.yaml
 
 # Build artifacts
 build/
-periphery
-periphery-*
+herald
+herald-*
 
 # Documentation build
 _site/
@@ -55,4 +55,4 @@ coverage.html
 *~
 
 # App
-periphery.log
+herald.log

@@ -1,6 +1,6 @@
 # Prometheus Metrics
 
-Periphery exposes Prometheus metrics for monitoring prefix availability, BGP peer status, probe execution, and more.
+Herald exposes Prometheus metrics for monitoring prefix availability, BGP peer status, probe execution, and more.
 
 ## Configuration
 
@@ -30,7 +30,7 @@ metrics:
 
 ### Prefix Metrics
 
-#### `periphery_prefix_up`
+#### `herald_prefix_up`
 **Type:** Gauge
 **Labels:** `prefix`, `name`
 **Description:** Prefix announcement status (1=announced, 0=withdrawn)
@@ -39,78 +39,78 @@ Indicates whether a prefix is currently announced via BGP based on readiness pro
 
 ```promql
 # Check if prefix is announced
-periphery_prefix_up{prefix="10.138.39.183/32",name="web.example.com"}
+herald_prefix_up{prefix="10.138.39.183/32",name="web.example.com"}
 
 # Count announced prefixes
-sum(periphery_prefix_up)
+sum(herald_prefix_up)
 
 # Prefixes that are down
-periphery_prefix_up == 0
+herald_prefix_up == 0
 ```
 
 ### Probe Metrics
 
-#### `periphery_probe_success_total`
+#### `herald_probe_success_total`
 **Type:** Counter
 **Labels:** `prefix`, `probe_type`, `name`
 **Description:** Total number of successful probe executions
 
 ```promql
 # Success rate by probe type
-rate(periphery_probe_success_total[5m])
+rate(herald_probe_success_total[5m])
 
 # Success count by service
-sum by (name) (periphery_probe_success_total)
+sum by (name) (herald_probe_success_total)
 ```
 
-#### `periphery_probe_failure_total`
+#### `herald_probe_failure_total`
 **Type:** Counter
 **Labels:** `prefix`, `probe_type`, `name`
 **Description:** Total number of failed probe executions
 
 ```promql
 # Failure rate
-rate(periphery_probe_failure_total[5m])
+rate(herald_probe_failure_total[5m])
 
 # Services with failures
-sum by (name) (periphery_probe_failure_total) > 0
+sum by (name) (herald_probe_failure_total) > 0
 ```
 
-#### `periphery_probe_duration_seconds`
+#### `herald_probe_duration_seconds`
 **Type:** Histogram
 **Labels:** `prefix`, `probe_type`, `name`
 **Description:** Duration of probe execution in seconds
 
 ```promql
 # Average probe duration
-rate(periphery_probe_duration_seconds_sum[5m]) / rate(periphery_probe_duration_seconds_count[5m])
+rate(herald_probe_duration_seconds_sum[5m]) / rate(herald_probe_duration_seconds_count[5m])
 
 # 95th percentile probe duration
-histogram_quantile(0.95, rate(periphery_probe_duration_seconds_bucket[5m]))
+histogram_quantile(0.95, rate(herald_probe_duration_seconds_bucket[5m]))
 
 # Slow probes (>1s)
-periphery_probe_duration_seconds > 1
+herald_probe_duration_seconds > 1
 ```
 
 ### BGP Peer Metrics
 
-#### `periphery_bgp_peer_up`
+#### `herald_bgp_peer_up`
 **Type:** Gauge
 **Labels:** `peer_address`, `peer_asn`
 **Description:** BGP peer status (1=established, 0=down)
 
 ```promql
 # Check peer status
-periphery_bgp_peer_up{peer_address="10.134.21.74",peer_asn="64599"}
+herald_bgp_peer_up{peer_address="10.134.21.74",peer_asn="64599"}
 
 # Count established peers
-sum(periphery_bgp_peer_up)
+sum(herald_bgp_peer_up)
 
 # Alert on peer down
-periphery_bgp_peer_up == 0
+herald_bgp_peer_up == 0
 ```
 
-#### `periphery_bgp_peer_state`
+#### `herald_bgp_peer_state`
 **Type:** Gauge
 **Labels:** `peer_address`, `peer_asn`
 **Description:** BGP peer session state
@@ -126,13 +126,13 @@ periphery_bgp_peer_up == 0
 
 ```promql
 # Peers not in established state
-periphery_bgp_peer_state != 6
+herald_bgp_peer_state != 6
 
 # Peer state changes
-changes(periphery_bgp_peer_state[1h])
+changes(herald_bgp_peer_state[1h])
 ```
 
-#### `periphery_bgp_peer_messages_sent_total`
+#### `herald_bgp_peer_messages_sent_total`
 **Type:** Counter
 **Labels:** `peer_address`, `peer_asn`, `message_type`
 **Description:** Total BGP messages sent to peer
@@ -141,61 +141,61 @@ changes(periphery_bgp_peer_state[1h])
 
 ```promql
 # Update messages sent per second
-rate(periphery_bgp_peer_messages_sent_total{message_type="update"}[5m])
+rate(herald_bgp_peer_messages_sent_total{message_type="update"}[5m])
 
 # Notification rate (potential issues)
-rate(periphery_bgp_peer_messages_sent_total{message_type="notification"}[5m])
+rate(herald_bgp_peer_messages_sent_total{message_type="notification"}[5m])
 ```
 
-#### `periphery_bgp_peer_messages_received_total`
+#### `herald_bgp_peer_messages_received_total`
 **Type:** Counter
 **Labels:** `peer_address`, `peer_asn`, `message_type`
 **Description:** Total BGP messages received from peer
 
 ```promql
 # Messages received per second
-rate(periphery_bgp_peer_messages_received_total[5m])
+rate(herald_bgp_peer_messages_received_total[5m])
 
 # Update message rate
-rate(periphery_bgp_peer_messages_received_total{message_type="update"}[5m])
+rate(herald_bgp_peer_messages_received_total{message_type="update"}[5m])
 ```
 
-#### `periphery_bgp_route_count`
+#### `herald_bgp_route_count`
 **Type:** Gauge
 **Labels:** `route_table`
 **Description:** Number of BGP routes in routing table
 
 ```promql
 # Total routes
-periphery_bgp_route_count{route_table="global"}
+herald_bgp_route_count{route_table="global"}
 
 # Route count changes
-delta(periphery_bgp_route_count[5m])
+delta(herald_bgp_route_count[5m])
 ```
 
 ### Service Metrics
 
-#### `periphery_service_restarts_total`
+#### `herald_service_restarts_total`
 **Type:** Counter
 **Labels:** `name`
 **Description:** Total number of service restarts triggered by failed probes
 
 ```promql
 # Restart rate
-rate(periphery_service_restarts_total[1h])
+rate(herald_service_restarts_total[1h])
 
 # Services with recent restarts
-increase(periphery_service_restarts_total[10m]) > 0
+increase(herald_service_restarts_total[10m]) > 0
 
 # Total restarts by service
-sum by (name) (periphery_service_restarts_total)
+sum by (name) (herald_service_restarts_total)
 ```
 
 ## Example Prometheus Configuration
 
 ```yaml
 scrape_configs:
-  - job_name: 'periphery'
+  - job_name: 'herald'
     static_configs:
       - targets: ['localhost:9091']
     scrape_interval: 15s
@@ -207,31 +207,31 @@ scrape_configs:
 ### Service Availability Panel
 
 ```promql
-periphery_prefix_up{name="web.example.com"}
+herald_prefix_up{name="web.example.com"}
 ```
 
 ### Probe Success Rate
 
 ```promql
-sum(rate(periphery_probe_success_total[5m])) by (name, probe_type)
+sum(rate(herald_probe_success_total[5m])) by (name, probe_type)
 /
 (
-  sum(rate(periphery_probe_success_total[5m])) by (name, probe_type)
+  sum(rate(herald_probe_success_total[5m])) by (name, probe_type)
   +
-  sum(rate(periphery_probe_failure_total[5m])) by (name, probe_type)
+  sum(rate(herald_probe_failure_total[5m])) by (name, probe_type)
 ) * 100
 ```
 
 ### BGP Peer Status Overview
 
 ```promql
-sum(periphery_bgp_peer_up) by (peer_address)
+sum(herald_bgp_peer_up) by (peer_address)
 ```
 
 ### Service Restart Frequency
 
 ```promql
-increase(periphery_service_restarts_total[1h])
+increase(herald_service_restarts_total[1h])
 ```
 
 ## Alerting Rules
@@ -240,10 +240,10 @@ increase(periphery_service_restarts_total[1h])
 
 ```yaml
 groups:
-  - name: periphery
+  - name: herald
     rules:
       - alert: PrefixDown
-        expr: periphery_prefix_up == 0
+        expr: herald_prefix_up == 0
         for: 2m
         labels:
           severity: critical
@@ -256,7 +256,7 @@ groups:
 
 ```yaml
 - alert: BGPPeerDown
-  expr: periphery_bgp_peer_up == 0
+  expr: herald_bgp_peer_up == 0
   for: 1m
   labels:
     severity: warning
@@ -271,12 +271,12 @@ groups:
 - alert: HighProbeFailureRate
   expr: |
     (
-      sum(rate(periphery_probe_failure_total[5m])) by (name)
+      sum(rate(herald_probe_failure_total[5m])) by (name)
       /
       (
-        sum(rate(periphery_probe_success_total[5m])) by (name)
+        sum(rate(herald_probe_success_total[5m])) by (name)
         +
-        sum(rate(periphery_probe_failure_total[5m])) by (name)
+        sum(rate(herald_probe_failure_total[5m])) by (name)
       )
     ) > 0.1
   for: 5m
@@ -291,7 +291,7 @@ groups:
 
 ```yaml
 - alert: FrequentServiceRestarts
-  expr: increase(periphery_service_restarts_total[10m]) > 3
+  expr: increase(herald_service_restarts_total[10m]) > 3
   labels:
     severity: warning
   annotations:
@@ -309,7 +309,7 @@ groups:
 
 ## Integration with GoBGP
 
-Periphery automatically collects BGP metrics from GoBGP, including:
+Herald automatically collects BGP metrics from GoBGP, including:
 - Peer session states and connectivity
 - Message counts (sent/received by type)
 - Route table statistics

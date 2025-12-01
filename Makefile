@@ -1,7 +1,7 @@
 TEST?=$$(go list ./...)
 GOFMT_FILES?=$$(find . -name '*.go' | grep -vE './_local')
 GO_CMD ?= go
-APP_NAME = periphery
+APP_NAME = herald
 BUILD_DIR = $(PWD)/build
 SHELL := /bin/bash
 
@@ -40,8 +40,8 @@ build:
 build-test:
 	echo "Standard binary"
 	mkdir -p dist
-	CGO_ENABLED=0 GOOS=linux $(GO_CMD) build -ldflags="-s -w" -o dist/periphery_linux_amd64/periphery main.go
-	du -hs dist/periphery_linux_amd64/periphery
+	CGO_ENABLED=0 GOOS=linux $(GO_CMD) build -ldflags="-s -w" -o dist/herald_linux_amd64/herald main.go
+	du -hs dist/herald_linux_amd64/herald
 
 release:
 	goreleaser release --skip=announce,publish,validate --clean
@@ -79,9 +79,9 @@ EOF \
 	bundle exec jekyll serve --source docs --watch --livereload
 
 docker-build:
-	docker build -t periphery:latest .
+	docker build -t herald:latest .
 
 docker-run:
-	docker run --rm -v $(PWD)/config.yaml:/etc/periphery/config.yaml periphery:latest
+	docker run --rm -v $(PWD)/config.yaml:/etc/herald/config.yaml herald:latest
 
 .PHONY: clean test security run fmt tidy lint lint-fix build build-test release pages pages-serve docker-build docker-run

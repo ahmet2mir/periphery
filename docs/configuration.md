@@ -1,13 +1,13 @@
 # Configuration Reference
 
-This document provides a complete reference for Periphery configuration.
+This document provides a complete reference for Herald configuration.
 
 ## Configuration File Format
 
-Periphery uses YAML for configuration. By default, it looks for `config.yaml` in the current directory.
+Herald uses YAML for configuration. By default, it looks for `config.yaml` in the current directory.
 
 ```bash
-periphery --config /etc/periphery/config.yaml
+herald --config /etc/herald/config.yaml
 ```
 
 ## Top-Level Structure

@@ -1,6 +1,6 @@
-# Contributing to Periphery
+# Contributing to Herald
 
-Thank you for your interest in contributing to Periphery! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to Herald! This document provides guidelines and instructions for contributing.
 
 ## Code of Conduct
 
@@ -35,8 +35,8 @@ Feature requests are welcome! Please include:
 
 1. **Fork and Clone**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/periphery.git
-   cd periphery
+   git clone https://github.com/YOUR_USERNAME/herald.git
+   cd herald
    ```
 
 2. **Create a Branch**
@@ -196,7 +196,7 @@ func TestProbeHTTP(t *testing.T) {
 ## Project Structure
 
 ```
-periphery/
+herald/
 ├── main.go                 # Entry point
 ├── pkg/
 │   ├── bfd/               # BFD implementation

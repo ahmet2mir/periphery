@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ahmet2mir/periphery/pkg/service"
+	"github.com/ahmet2mir/herald/pkg/service"
 )
 
 type ProbeInterface interface {

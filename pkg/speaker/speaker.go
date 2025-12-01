@@ -13,8 +13,8 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/anypb"
 
-	"github.com/ahmet2mir/periphery/pkg/config"
-	"github.com/ahmet2mir/periphery/pkg/logger"
+	"github.com/ahmet2mir/herald/pkg/config"
+	"github.com/ahmet2mir/herald/pkg/logger"
 )
 
 type Speaker struct {

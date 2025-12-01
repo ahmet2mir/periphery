@@ -1,6 +1,6 @@
-# Periphery Documentation
+# Herald Documentation
 
-Welcome to the Periphery documentation. Periphery is a lightweight BGP anycast service with Kubernetes-inspired health probes and BFD support.
+Welcome to the Herald documentation. Herald is a lightweight BGP anycast service with Kubernetes-inspired health probes and BFD support.
 
 ## Getting Started
 

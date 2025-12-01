@@ -12,7 +12,7 @@ import (
 
 // getSyslogWriter creates a syslog writer for Unix systems
 func getSyslogWriter(cfg Config) (zapcore.WriteSyncer, func() error, error) {
-	writer, err := syslog.New(syslog.LOG_INFO|syslog.LOG_DAEMON, "periphery")
+	writer, err := syslog.New(syslog.LOG_INFO|syslog.LOG_DAEMON, "herald")
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to connect to syslog: %w", err)
 	}

@@ -1,17 +1,17 @@
 # GitHub Pages Configuration
 theme: jekyll-theme-cayman
-title: Periphery
+title: Herald
 description: A lightweight BGP anycast service with Kubernetes-inspired health probes and BFD support
 show_downloads: true
 google_analytics:
 
-repository: ahmet2mir/periphery
+repository: ahmet2mir/herald
 
 # GitHub metadata
 github:
-  repository_url: https://github.com/ahmet2mir/periphery
-  zip_url: https://github.com/ahmet2mir/periphery/zipball/main
-  tar_url: https://github.com/ahmet2mir/periphery/tarball/main
+  repository_url: https://github.com/ahmet2mir/herald
+  zip_url: https://github.com/ahmet2mir/herald/zipball/main
+  tar_url: https://github.com/ahmet2mir/herald/tarball/main
 
 # Navigation
 navigation:
@@ -20,7 +20,7 @@ navigation:
   - title: Documentation
     url: /index
   - title: GitHub
-    url: https://github.com/ahmet2mir/periphery
+    url: https://github.com/ahmet2mir/herald
 
 # Markdown settings
 markdown: kramdown

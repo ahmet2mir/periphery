@@ -8,9 +8,9 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/ahmet2mir/periphery/pkg/logger"
-	"github.com/ahmet2mir/periphery/pkg/probe"
-	"github.com/ahmet2mir/periphery/pkg/service"
+	"github.com/ahmet2mir/herald/pkg/logger"
+	"github.com/ahmet2mir/herald/pkg/probe"
+	"github.com/ahmet2mir/herald/pkg/service"
 )
 
 type ConfigAPI struct {
