@@ -1,6 +1,8 @@
 # Periphery
 
-> A lightweight BGP anycast service with Kubernetes-inspired health probes and BFD support
+> :warning: **BETA**: Not production ready yet, api and design could evolve.
+> 
+> Anycast service written in Go inspired by ExaBGP and Kubernetes-inspired health probes
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/ahmet2mir/periphery)](https://goreportcard.com/report/github.com/ahmet2mir/periphery)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
