@@ -15,9 +15,11 @@ Periphery is a modern BGP speaker designed as a drop-in replacement for ExaBGP i
   - **Liveness Probe**: Detect service failures and trigger restarts
   - **Readiness Probe**: Control route announcement based on service availability
 - **Multiple Probe Types**: HTTP, TCP, gRPC, and Exec probes
+- **Prometheus Metrics**: Built-in metrics for prefix availability, BGP peer status, probe execution, and GoBGP data
 - **BFD Support**: Bidirectional Forwarding Detection for fast failure detection
 - **Systemd Integration**: Direct service management via systemd D-Bus
 - **Graceful Restart**: BGP graceful restart support for zero-downtime maintenance
+- **Flexible Logging**: Multiple logging drivers (file, syslog, journald, Windows Event Log)
 - **Zero Dependencies**: Single binary with no external dependencies
 
 ## Quick Start
@@ -285,6 +287,35 @@ logging:
 - **none**: Disable logging
 
 See [docs/logging.md](docs/logging.md) for detailed logging configuration and examples.
+
+## Prometheus Metrics
+
+Periphery exposes Prometheus metrics for comprehensive monitoring:
+
+```yaml
+metrics:
+  enabled: true
+  listenAddress: "0.0.0.0"
+  listenPort: 9091
+  interval: 15s
+```
+
+### Available Metrics
+
+- **Prefix metrics**: Announcement status, probe success/failure rates, probe duration
+- **BGP metrics**: Peer status, session state, message counts, route count
+- **Service metrics**: Restart count, availability
+
+**Key metrics:**
+- `periphery_prefix_up`: Prefix announcement status (1=announced, 0=withdrawn)
+- `periphery_bgp_peer_up`: BGP peer connectivity
+- `periphery_probe_success_total`: Successful probe executions
+- `periphery_probe_failure_total`: Failed probe executions
+- `periphery_service_restarts_total`: Service restart count
+
+All metrics include the `name` label for service identification in multi-service deployments.
+
+See [docs/metrics.md](docs/metrics.md) for complete metrics reference, PromQL examples, and alerting rules.
 
 ## Development
 

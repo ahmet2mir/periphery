@@ -22,13 +22,25 @@ func (ca *ConfigAPI) GetURI() string {
 	return fmt.Sprintf("%s:%d", ca.ListenAddress, ca.ListenPort)
 }
 
+type MetricsConfig struct {
+	Enabled       bool          `yaml:"enabled"`
+	ListenAddress string        `yaml:"listenAddress"`
+	ListenPort    int           `yaml:"listenPort"`
+	Interval      time.Duration `yaml:"interval"`
+}
+
+func (mc *MetricsConfig) GetURI() string {
+	return fmt.Sprintf("%s:%d", mc.ListenAddress, mc.ListenPort)
+}
+
 type Config struct {
-	Logging   logger.Config `yaml:"logging"`
-	Speaker   Speaker       `yaml:"speaker"`
-	BFD       *BFDConfig    `yaml:"bfd"`
-	API       ConfigAPI     `yaml:"api"`
-	Neighbors []Neighbor    `yaml:"neighbors"`
-	Prefixes  []Prefix      `yaml:"prefixes"`
+	Logging   logger.Config  `yaml:"logging"`
+	Metrics   *MetricsConfig `yaml:"metrics"`
+	Speaker   Speaker        `yaml:"speaker"`
+	BFD       *BFDConfig     `yaml:"bfd"`
+	API       ConfigAPI      `yaml:"api"`
+	Neighbors []Neighbor     `yaml:"neighbors"`
+	Prefixes  []Prefix       `yaml:"prefixes"`
 }
 
 type Speaker struct {
@@ -60,6 +72,7 @@ type Neighbor struct {
 
 type Prefix struct {
 	IPAddress              string   `yaml:"ipAddress"`
+	Name                   string   `yaml:"name"`
 	Communities            []string `yaml:"communities"`
 	NextHop                string   `yaml:"nextHop"`
 	ASN                    uint32   `yaml:"asn"`
