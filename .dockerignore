@@ -1,0 +1,44 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+.goreleaser.yml
+
+# Documentation
+docs
+README.md
+CONTRIBUTING.md
+LICENSE
+
+# Build artifacts
+dist
+build
+_site
+*.tar.gz
+*.zip
+
+# Testing
+cover.out
+*.test
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Dependencies
+vendor
+
+# Configs (user should mount their own)
+config.yaml
+config.test.yaml
+*.example
+
+# Temporary files
+tmp
+.tmp

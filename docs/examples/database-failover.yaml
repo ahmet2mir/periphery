@@ -1,0 +1,79 @@
+# Database Failover Example
+# PostgreSQL with replication lag checking
+
+speaker:
+  asn: 64600
+  routerId: "10.0.0.1"
+  gracefulRestartEnabled: true
+  gracefulRestartRestartTime: 120
+
+api:
+  listenAddress: "127.0.0.1"
+  listenPort: 50051
+
+neighbors:
+  - address: "10.0.0.254"
+    asn: 64599
+    ebgpMultihopEnabled: false
+
+prefixes:
+  # Database VIP
+  - ipAddress: "192.0.2.100/32"
+    communities:
+      - '65000:200'  # Database service
+    nextHop: "10.0.0.1"
+    multiExitDescriminator: 100  # Lower MED = higher preference
+    withdrawOnDown: true
+
+    service:
+      name: postgresql.service
+      type: systemd
+
+    # Ensure database is ready before health checks
+    startupProbe:
+      initialDelaySeconds: "30s"
+      periodSeconds: "5s"
+      timeoutSeconds: "10s"
+      failureThreshold: 10
+      successThreshold: 1
+      exec:
+        command: /usr/local/bin/pg_isready
+        args:
+          - "-U"
+          - "postgres"
+        exitCodes: [0]
+
+    # Restart PostgreSQL if it becomes unresponsive
+    livenessProbe:
+      initialDelaySeconds: "60s"
+      periodSeconds: "30s"
+      timeoutSeconds: "10s"
+      failureThreshold: 3
+      successThreshold: 1
+      tcp:
+        host: localhost
+        port: 5432
+        timeout: "5s"
+
+    # Only announce if replication lag is acceptable
+    readinessProbe:
+      initialDelaySeconds: "60s"
+      periodSeconds: "15s"
+      timeoutSeconds: "10s"
+      failureThreshold: 2
+      successThreshold: 1
+      exec:
+        command: /usr/local/bin/check-replication-lag
+        args:
+          - "--max-lag-seconds=10"
+        exitCodes: [0]
+
+# Example check-replication-lag script:
+# #!/bin/bash
+# MAX_LAG=${1#--max-lag-seconds=}
+# LAG=$(psql -U postgres -t -c "SELECT EXTRACT(EPOCH FROM (now() - pg_last_xact_replay_timestamp()))::int;")
+# if [ "$LAG" -lt "$MAX_LAG" ]; then
+#   exit 0
+# else
+#   exit 1
+# fi

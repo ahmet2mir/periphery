@@ -1,0 +1,36 @@
+package service
+
+import (
+	"fmt"
+	"context"
+
+	"github.com/coreos/go-systemd/v22/dbus"
+)
+
+func (s *ServiceSystemd) Started(ctx context.Context) (bool, error) {
+	systemdConnection, err := dbus.NewSystemConnectionContext(ctx)
+	if err != nil {
+		return false, fmt.Errorf("Failed to connect to systemd: %w", err)
+	}
+	defer systemdConnection.Close()
+
+	listOfUnits, err := systemdConnection.ListUnitsContext(ctx)
+	if err != nil {
+		return false, fmt.Errorf("Failed to list units: %w", err)
+	}
+
+	found := false
+	targetUnit := dbus.UnitStatus{}
+	for _, unit := range listOfUnits {
+		if unit.Name == s.Name {
+			fmt.Printf("Found systemd unit %s", s.Name)
+			found = true
+			targetUnit = unit
+			break
+		}
+	}
+
+	if !found {
+		return false, fmt.Errorf("Expected systemd unit %s not found", s.Name)
+	}
+}

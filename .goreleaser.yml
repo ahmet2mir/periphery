@@ -1,0 +1,222 @@
+project_name: periphery
+
+before:
+  hooks:
+    - go mod tidy
+    - go mod download
+
+builds:
+  - id: periphery
+    binary: periphery
+    main: .
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+      - arm
+      - "386"
+    goarm:
+      - "6"
+      - "7"
+    ignore:
+      - goos: windows
+        goarch: arm64
+      - goos: windows
+        goarch: arm
+      - goos: darwin
+        goarch: "386"
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+      - -X main.builtBy=goreleaser
+    flags:
+      - -trimpath
+
+archives:
+  - id: periphery
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - LICENSE
+      - README.md
+      - docs/configuration.md
+      - docs/getting-started.md
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - '^ci:'
+      - Merge pull request
+      - Merge branch
+  groups:
+    - title: Features
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: 'Bug fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 1
+    - title: 'Performance improvements'
+      regexp: "^.*perf[(\\w)]*:+.*$"
+      order: 2
+    - title: Others
+      order: 999
+
+release:
+  github:
+    owner: ahmet2mir
+    name: periphery
+  draft: false
+  prerelease: auto
+  mode: append
+  header: |
+    ## Periphery {{ .Tag }} ({{ .Date }})
+
+    A lightweight BGP anycast service with Kubernetes-inspired health probes.
+
+    ### Installation
+
+    Download the appropriate binary for your platform below, or use Docker:
+
+    ```bash
+    docker pull ghcr.io/ahmet2mir/periphery:{{ .Tag }}
+    ```
+  footer: |
+    ## What's Changed
+
+    **Full Changelog**: https://github.com/ahmet2mir/periphery/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+    ---
+
+    ### Verification
+
+    All binaries are signed and checksummed. Verify with:
+
+    ```bash
+    sha256sum -c checksums.txt
+    ```
+
+dockers:
+  - image_templates:
+      - "ghcr.io/ahmet2mir/periphery:{{ .Version }}-amd64"
+      - "ghcr.io/ahmet2mir/periphery:latest-amd64"
+    use: buildx
+    goos: linux
+    goarch: amd64
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
+      - "--label=org.opencontainers.image.description=BGP anycast service with health probes"
+      - "--label=org.opencontainers.image.url=https://github.com/ahmet2mir/periphery"
+      - "--label=org.opencontainers.image.source=https://github.com/ahmet2mir/periphery"
+      - "--label=org.opencontainers.image.version={{ .Version }}"
+      - "--label=org.opencontainers.image.created={{ .Date }}"
+      - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
+      - "--label=org.opencontainers.image.licenses=Apache-2.0"
+
+  - image_templates:
+      - "ghcr.io/ahmet2mir/periphery:{{ .Version }}-arm64"
+      - "ghcr.io/ahmet2mir/periphery:latest-arm64"
+    use: buildx
+    goos: linux
+    goarch: arm64
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--platform=linux/arm64"
+      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
+      - "--label=org.opencontainers.image.description=BGP anycast service with health probes"
+      - "--label=org.opencontainers.image.url=https://github.com/ahmet2mir/periphery"
+      - "--label=org.opencontainers.image.source=https://github.com/ahmet2mir/periphery"
+      - "--label=org.opencontainers.image.version={{ .Version }}"
+      - "--label=org.opencontainers.image.created={{ .Date }}"
+      - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
+      - "--label=org.opencontainers.image.licenses=Apache-2.0"
+
+docker_manifests:
+  - name_template: "ghcr.io/ahmet2mir/periphery:{{ .Version }}"
+    image_templates:
+      - "ghcr.io/ahmet2mir/periphery:{{ .Version }}-amd64"
+      - "ghcr.io/ahmet2mir/periphery:{{ .Version }}-arm64"
+
+  - name_template: "ghcr.io/ahmet2mir/periphery:latest"
+    image_templates:
+      - "ghcr.io/ahmet2mir/periphery:latest-amd64"
+      - "ghcr.io/ahmet2mir/periphery:latest-arm64"
+
+nfpms:
+  - id: periphery
+    package_name: periphery
+    vendor: Ahmet Demir
+    homepage: https://github.com/ahmet2mir/periphery
+    maintainer: Ahmet Demir <ahmet2mir@example.com>
+    description: |
+      BGP anycast service with Kubernetes-inspired health probes and BFD support.
+      Periphery provides intelligent route announcement based on service health checks.
+    license: Apache 2.0
+    formats:
+      - deb
+      - rpm
+      - apk
+    bindir: /usr/bin
+    contents:
+      - src: docs/examples/complete.yaml
+        dst: /etc/periphery/config.yaml.example
+        type: config
+      - src: LICENSE
+        dst: /usr/share/doc/periphery/LICENSE
+      - src: README.md
+        dst: /usr/share/doc/periphery/README.md
+    scripts:
+      postinstall: "scripts/postinstall.sh"
+      preremove: "scripts/preremove.sh"
+    overrides:
+      deb:
+        dependencies:
+          - systemd
+      rpm:
+        dependencies:
+          - systemd
+
+sboms:
+  - artifacts: archive
+
+signs:
+  - cmd: cosign
+    env:
+      - COSIGN_EXPERIMENTAL=1
+    certificate: '${artifact}.pem'
+    args:
+      - sign-blob
+      - '--output-certificate=${certificate}'
+      - '--output-signature=${signature}'
+      - '${artifact}'
+      - "--yes"
+    artifacts: checksum
+    output: true

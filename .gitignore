@@ -1,0 +1,55 @@
+#### joe made this: http://goel.io/joe
+
+#### go ####
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Go workspace file
+go.work
+go.work.sum
+
+# env file
+.env
+
+# not joe
+dist/
+bin/
+trash/
+main
+tmp
+_local/
+config.test.yaml
+.claude/
+
+# Build artifacts
+build/
+periphery
+periphery-*
+
+# Documentation build
+_site/
+.jekyll-cache/
+.jekyll-metadata
+Gemfile.lock
+vendor/
+
+# Coverage
+cover.out
+coverage.html
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

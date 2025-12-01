@@ -1,0 +1,28 @@
+# GitHub Pages Configuration
+theme: jekyll-theme-cayman
+title: Periphery
+description: A lightweight BGP anycast service with Kubernetes-inspired health probes and BFD support
+show_downloads: true
+google_analytics:
+
+# GitHub metadata
+github:
+  repository_url: https://github.com/ahmet2mir/periphery
+  zip_url: https://github.com/ahmet2mir/periphery/zipball/main
+  tar_url: https://github.com/ahmet2mir/periphery/tarball/main
+
+# Navigation
+navigation:
+  - title: Home
+    url: /
+  - title: Documentation
+    url: /index
+  - title: GitHub
+    url: https://github.com/ahmet2mir/periphery
+
+# Markdown settings
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge

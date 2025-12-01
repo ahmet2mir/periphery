@@ -1,0 +1,166 @@
+# Complete Periphery Configuration Example
+# This file demonstrates all available configuration options
+
+# BGP Speaker Configuration
+speaker:
+  asn: 64600                              # Local AS number (required)
+  routerId: "10.0.0.1"                   # BGP router ID (required, IPv4 format)
+  gracefulRestartEnabled: true            # Enable BGP graceful restart
+  gracefulRestartRestartTime: 120         # GR restart time in seconds
+
+# BFD Configuration (optional)
+bfd:
+  enabled: true                                    # Enable BFD
+  listenAddress: "0.0.0.0"                        # Listen on all interfaces
+  listenPort: 3784                                # Standard BFD port
+  minimumReceptionInterval: 300ms                  # Min interval for receiving packets
+  minimumTransmissionInterval: 300ms               # Min interval for sending packets
+  detectionMultiplier: 3                          # Packets to miss before down (detection time = 300ms * 3 = 900ms)
+  passive: false                                   # Active mode
+
+# gRPC API Server
+api:
+  listenAddress: "127.0.0.1"    # Listen only on localhost
+  listenPort: 50051              # Standard gRPC port
+
+# BGP Neighbors
+neighbors:
+  # First neighbor
+  - address: "10.0.0.254"
+    asn: 64599
+    ebgpMultihopEnabled: false    # Direct connection
+
+  # Second neighbor (for redundancy)
+  - address: "10.0.0.253"
+    asn: 64599
+    ebgpMultihopEnabled: false
+
+# Prefixes to Announce
+prefixes:
+  # Example 1: Web service with HTTP health check
+  - ipAddress: "192.0.2.1/32"
+    communities:
+      - '65000:100'               # Custom community
+      - '65000:200'
+    nextHop: "10.0.0.1"
+    asn: 64600
+    multiExitDescriminator: 100   # MED value
+    asPathPrepend: []             # No AS path prepend
+    withdrawOnDown: true          # Withdraw route when unhealthy
+    maintenance: /etc/maintenance/web  # Maintenance mode file
+
+    service:
+      name: nginx.service
+      type: systemd
+
+    # Wait for service initialization
+    startupProbe:
+      initialDelaySeconds: "10s"
+      periodSeconds: "5s"
+      timeoutSeconds: "3s"
+      failureThreshold: 5
+      successThreshold: 1
+      exec:
+        command: /usr/local/bin/nginx-ready
+        args: []
+        exitCodes: [0]
+
+    # Restart service if unhealthy
+    livenessProbe:
+      initialDelaySeconds: "30s"
+      periodSeconds: "10s"
+      timeoutSeconds: "5s"
+      failureThreshold: 3
+      successThreshold: 1
+      http:
+        host: localhost
+        port: 80
+        path: /healthz
+        scheme: http
+        expectedStatus: [200]
+
+    # Control route announcement
+    readinessProbe:
+      initialDelaySeconds: "15s"
+      periodSeconds: "10s"
+      timeoutSeconds: "5s"
+      failureThreshold: 2
+      successThreshold: 1
+      http:
+        host: localhost
+        port: 80
+        path: /ready
+        scheme: http
+        expectedStatus: [200, 204]
+        httpHeaders:
+          - name: User-Agent
+            value: "Periphery/1.0"
+
+  # Example 2: Database with TCP check
+  - ipAddress: "192.0.2.2/32"
+    communities:
+      - '65000:300'
+    nextHop: "10.0.0.1"
+    withdrawOnDown: true
+
+    service:
+      name: postgresql.service
+      type: systemd
+
+    readinessProbe:
+      initialDelaySeconds: "30s"
+      periodSeconds: "15s"
+      timeoutSeconds: "5s"
+      failureThreshold: 3
+      successThreshold: 1
+      tcp:
+        host: localhost
+        port: 5432
+        timeout: "3s"
+
+  # Example 3: gRPC service
+  - ipAddress: "192.0.2.3/32"
+    communities:
+      - '65000:400'
+    nextHop: "10.0.0.1"
+    withdrawOnDown: true
+
+    service:
+      name: myapp.service
+      type: systemd
+
+    readinessProbe:
+      initialDelaySeconds: "20s"
+      periodSeconds: "10s"
+      timeoutSeconds: "5s"
+      failureThreshold: 3
+      successThreshold: 1
+      grpc:
+        host: localhost
+        port: 9090
+        service: myapp.health.v1.Health
+        timeout: "5s"
+
+  # Example 4: Custom health check script
+  - ipAddress: "192.0.2.4/32"
+    communities:
+      - '65000:500'
+    nextHop: "10.0.0.1"
+    withdrawOnDown: true
+
+    service:
+      name: custom-app.service
+      type: systemd
+
+    readinessProbe:
+      initialDelaySeconds: "10s"
+      periodSeconds: "30s"
+      timeoutSeconds: "10s"
+      failureThreshold: 2
+      successThreshold: 1
+      exec:
+        command: /usr/local/bin/health-check
+        args:
+          - "--verbose"
+          - "--timeout=5"
+        exitCodes: [0, 2]  # Accept exit codes 0 or 2 as success

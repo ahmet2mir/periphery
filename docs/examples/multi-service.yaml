@@ -1,0 +1,124 @@
+# Multi-Service Anycast Example
+# Multiple services with different health check types
+
+speaker:
+  asn: 64600
+  routerId: "10.0.0.1"
+  gracefulRestartEnabled: true
+  gracefulRestartRestartTime: 120
+
+bfd:
+  enabled: true
+  listenAddress: "0.0.0.0"
+  listenPort: 3784
+  minimumReceptionInterval: 300ms
+  minimumTransmissionInterval: 300ms
+  detectionMultiplier: 3
+
+api:
+  listenAddress: "127.0.0.1"
+  listenPort: 50051
+
+neighbors:
+  - address: "10.0.0.254"
+    asn: 64599
+    ebgpMultihopEnabled: false
+  - address: "10.0.0.253"
+    asn: 64599
+    ebgpMultihopEnabled: false
+
+prefixes:
+  # Web Frontend (HTTP)
+  - ipAddress: "192.0.2.10/32"
+    communities:
+      - '65000:100'
+    nextHop: "10.0.0.1"
+    multiExitDescriminator: 100
+
+    service:
+      name: nginx.service
+      type: systemd
+
+    readinessProbe:
+      periodSeconds: "10s"
+      timeoutSeconds: "5s"
+      failureThreshold: 3
+      successThreshold: 1
+      http:
+        host: localhost
+        port: 80
+        path: /health
+        expectedStatus: [200]
+
+  # API Service (gRPC)
+  - ipAddress: "192.0.2.20/32"
+    communities:
+      - '65000:200'
+    nextHop: "10.0.0.1"
+    multiExitDescriminator: 100
+
+    service:
+      name: api-server.service
+      type: systemd
+
+    readinessProbe:
+      periodSeconds: "10s"
+      timeoutSeconds: "5s"
+      failureThreshold: 3
+      successThreshold: 1
+      grpc:
+        host: localhost
+        port: 9090
+        service: api.health.v1.Health
+        timeout: "5s"
+
+  # Database (TCP + Custom Script)
+  - ipAddress: "192.0.2.30/32"
+    communities:
+      - '65000:300'
+    nextHop: "10.0.0.1"
+    multiExitDescriminator: 100
+
+    service:
+      name: postgresql.service
+      type: systemd
+
+    livenessProbe:
+      periodSeconds: "30s"
+      timeoutSeconds: "5s"
+      failureThreshold: 3
+      successThreshold: 1
+      tcp:
+        host: localhost
+        port: 5432
+        timeout: "3s"
+
+    readinessProbe:
+      periodSeconds: "15s"
+      timeoutSeconds: "10s"
+      failureThreshold: 2
+      successThreshold: 1
+      exec:
+        command: /usr/local/bin/check-db-health
+        exitCodes: [0]
+
+  # Cache Service (TCP)
+  - ipAddress: "192.0.2.40/32"
+    communities:
+      - '65000:400'
+    nextHop: "10.0.0.1"
+    multiExitDescriminator: 100
+
+    service:
+      name: redis.service
+      type: systemd
+
+    readinessProbe:
+      periodSeconds: "10s"
+      timeoutSeconds: "3s"
+      failureThreshold: 3
+      successThreshold: 1
+      tcp:
+        host: localhost
+        port: 6379
+        timeout: "2s"
